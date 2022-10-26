@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public class ApplicationModule extends AbstractModule {
     private final @NotNull String filePath;
 
-
     public ApplicationModule(@NotNull String filePath) {
         this.filePath = filePath;
     }
