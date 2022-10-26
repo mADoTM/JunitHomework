@@ -7,5 +7,4 @@ import org.jetbrains.annotations.NotNull;
 public final class Book {
     private final @NotNull String name;
     private final @NotNull Author author;
-
 }
