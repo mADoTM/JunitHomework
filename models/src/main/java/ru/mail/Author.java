@@ -1,6 +1,9 @@
 package ru.mail;
 
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-public record Author(@NotNull String name) {
+@Data
+public final class Author {
+    private final @NotNull String name;
 }
