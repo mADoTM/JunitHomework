@@ -26,6 +26,7 @@ public class Library {
     public int getSize() {
         return size;
     }
+
     public void printBooks() {
         for(int i = 0; i < books.length; i++) {
             try {
