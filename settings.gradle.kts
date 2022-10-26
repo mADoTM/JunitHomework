@@ -1,3 +1,3 @@
 rootProject.name = "JunitHomework"
 include("models")
-include("models")
+include("library")
