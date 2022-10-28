@@ -1,7 +1,9 @@
 package ru.mail;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public interface BooksFactory {
-    List<Book> books();
+    @NotNull List<Book> books();
 }

@@ -4,8 +4,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
 public class LibraryFactoryImpl implements LibraryFactory {
-    @NotNull
-    private final BooksFactory booksFactory;
+    private final @NotNull BooksFactory booksFactory;
 
     @Inject
     public LibraryFactoryImpl(@NotNull BooksFactory booksFactory) {
