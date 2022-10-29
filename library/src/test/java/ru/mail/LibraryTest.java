@@ -35,91 +35,94 @@ class LibraryTest {
     private @NotNull List<Book> books;
 
     @Test
-    public void whenSizeLessBooksAmount() {
+    public void factoryThrowsExceptionIfLibraryHasLessSlotsThatBooks() {
         assertThrows(IllegalArgumentException.class, () -> libraryFactory.create(books.size() - 1));
     }
 
     @Test
-    public void libraryHasSameOrderedBooks() {
+    public void libraryHasSameOrderedBooksLikeFactoryBooksOthersCellShouldBeEmpty() {
         library = libraryFactory.create(books.size() + 1);
 
-        for(int i = 0; i < library.getSize(); i++) {
-            outContent.reset();
-            try {
-                library.getBook(i);
-            }
-            catch (IllegalArgumentException e) {
-                System.out.print(i + "::");
-            }
-
-            String bookString = outContent.toString();
-            String expectedStr = i + "::";
-
-            if(i < books.size()) {
-                expectedStr += books.get(i).toString();
-            }
-            assertEquals(expectedStr, bookString);
+        for(int i = 0; i < books.size(); i++) {
+            assertEquals(books.get(i), library.getBook(i));
         }
+
+        for(int i = books.size(); i < library.getSize(); i++) {
+            int index = i;
+            assertThrows(IllegalArgumentException.class, () -> library.getBook(index));
+        }
+    }
+
+    @Test
+    public void whenBookTakingInfoAboutThatBookPrinting() {
+        int index = 1;
+        final var libraryBook = library.getBook(index);
+        library.printBook(index);
+        String cellNumber = outContent.toString().split("::")[0];
+        String bookString = outContent.toString().split("::")[1];
+
+        assertEquals(index, Integer.parseInt(cellNumber));
+        assertEquals(libraryBook.toString(), bookString);
+    }
+
+    @Test
+    public void whenBookTakingFromEmptyCellThrowException() {
+        library = libraryFactory.create(books.size() + 1);
+        assertThrows(IllegalArgumentException.class, () -> library.printBook(books.size()));
     }
 
     @Test
     public void whenBookTakenGivenThatBook() {
         int index = 1;
-        library.getBook(index);
+        final var libraryBook = library.getBook(index);
 
-        String bookString = outContent.toString().split("::")[1];
-        assertEquals(books.get(index).toString(), bookString);
+        library.printBook(index);
+        String actualLibraryBookString = outContent.toString().split("::")[1];
+
+        assertEquals(libraryBook.toString(), actualLibraryBookString);
     }
 
     @Test
-    public void whenBookTakenInfoIsPrinting() {
-        library.getBook(1);
-        String cellNumber = outContent.toString().split("::")[0];
-        String bookString = outContent.toString().split("::")[1];
+    public void bookShouldBePuttedOnFirstEmptyCell() {
+        final var book1 = new Book("test book0", new Author("test author 0"));
+        final var book3 = new Book("test book1", new Author("test author 1"));
 
-        assertEquals(1, Integer.parseInt(cellNumber));
-        assertNotEquals("", bookString);
-    }
+        library.printBook(1);
+        library.printBook(3);
 
-    @Test
-    public void throwExceptionForEmptyCell() {
-        library = libraryFactory.create(books.size() + 1);
-        assertThrows(IllegalArgumentException.class, () -> library.getBook(books.size()));
-    }
-
-    @Test
-    public void bookShouldPutOnFirstEmptyCell() {
-        final var book0 = new Book("test book0", new Author("test author 0"));
-        final var book1 = new Book("test book1", new Author("test author 1"));
-
-        library.getBook(0);
-        library.getBook(1);
-
+        library.putBook(book3);
         library.putBook(book1);
-        library.putBook(book0);
 
         outContent.reset();
-        library.getBook(0);
+        library.printBook(1);
         String bookString = outContent.toString().split("::")[1];
-        assertEquals(book1.toString(), bookString);
+        assertEquals(book3.toString(), bookString);
 
         outContent.reset();
-        library.getBook(1);
+        library.printBook(3);
         bookString = outContent.toString().split("::")[1];
-        assertEquals(book0.toString(), bookString);
+        assertEquals(book1.toString(), bookString);
     }
 
     @Test
-    public void throwExceptionWhenNoSpaceInLibrary() {
+    public void libraryThrowExceptionIfThereAreNoFreeSpace() {
         final var testBook = new Book("test book", new Author("test author"));
 
         assertThrows(IllegalArgumentException.class, () -> library.putBook(testBook));
     }
 
     @Test
-    public void printBooksPrintingInConsole() {
+    public void printBooksMethodPrintingInConsole() {
         library.printBooks();
-        assertNotEquals(outContent.toString(), "");
+        final var booksInString = outContent.toString().split("\n");
+        for(int i = 0; i < library.getSize(); i++) {
+            try {
+                final var libraryBook = library.getBook(i);
+                assertEquals(i + "::" + libraryBook, booksInString[i]);
+            } catch(IllegalArgumentException e) {
+                assertEquals(i + "::", booksInString[i]);
+            }
+        }
     }
 
     @BeforeEach
