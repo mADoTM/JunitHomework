@@ -36,12 +36,12 @@ public class Library {
     public void printBooks() {
         for(int i = 0; i < books.length; i++) {
             try {
-                printBook(i);
+                System.out.print(i + "::" + getBook(i));
             }
             catch(IllegalArgumentException e) {
                 System.out.print(i + "::");
             }
-            System.out.println();
+            System.out.print("\n");
         }
     }
 
